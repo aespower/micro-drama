@@ -1,6 +1,6 @@
 ---
 name: micro-drama
-description: Crea micro dramas verticales con IA (Google Flow) de principio a fin — guion por escenas, auditoría con las 5 Story Rules (question first, make us care, viewer knows more, every beat turns, pay off then reopen), master sets, retratos, clip prompts encadenados segundo a segundo y plan de edición con coste en créditos. Úsala cuando el usuario quiera escribir, revisar o producir un episodio de micro drama, serie corta vertical, drama de 9:16, "short drama", o pida auditar un episode-NN-script.md contra las story rules.
+description: Crea micro dramas verticales con IA (Google Flow) de principio a fin — guion por escenas, auditoría con las 5 Story Rules (question first, make us care, viewer knows more, every beat turns, pay off then reopen) y un Flow Agent Brief por escena listo para copiar y pegar en el modo Agent de Flow, que genera ingredientes, keyframes y todos los clips; más plan de edición con coste en créditos. Úsala cuando el usuario quiera escribir, revisar o producir un episodio de micro drama, serie corta vertical, drama de 9:16, "short drama", o pida auditar un episode-NN-script.md contra las story rules.
 ---
 
 # Micro Drama (Google Flow)
@@ -11,6 +11,7 @@ Archivos de referencia (léelos cuando llegues al paso que los usa):
 - `references/story-rules.md` — las 5 reglas, criterios PASA/FALLA, tabla de auditoría, política de corrección.
 - `references/prompt-templates.md` — formato de escena, master set, retrato, clip prompt, AVOID, transiciones, gramática de cámara, rechazos de Flow, mapa regla → plano.
 - `references/production.md` — encadenado de frames, checklist de edición, costes.
+- `references/flow-agent-format.md` — formato del Flow Agent Brief (salida principal de producción).
 - `assets/episode-template.md` — plantilla de `episode-NN-script.md`.
 
 ## Modos
@@ -19,9 +20,9 @@ Detecta el modo por la petición:
 
 | Petición | Modo | Pasos |
 |---|---|---|
-| "Escribe / crea el episodio…" | Completo | A → B → (pausa) → C → D → E |
+| "Escribe / crea el episodio…" | Completo | A → B → (pausa) → C+D → E |
 | "Revisa / audita / check episode-NN…" | Auditoría | B y para |
-| "Haz los prompts de…" (guion ya aprobado) | Producción | C → D → E |
+| "Haz los prompts / el brief de Flow de…" (guion ya aprobado) | Producción | C+D → E |
 
 ## A · Guion (paso 1: escenas, no clips)
 
@@ -45,25 +46,26 @@ Detecta el modo por la petición:
 
 Si el archivo indicado no existe, dilo y pide el guion; no inventes uno para auditarlo.
 
-## C · Set y reparto (pasos 2–3)
+## C+D · Flow Agent Brief (pasos 2–5) — SALIDA PRINCIPAL
 
-Con `references/prompt-templates.md`:
-1. Un **master set** por localización (image prompt, 9:16, sin personas, lista de props fijos).
-2. Un **retrato limpio** por personaje, dentro del master set, misma luz. Nunca hojas multi-ángulo.
-3. Keyframe de apertura de cada escena con todos sus personajes en cuadro.
+Lee `references/flow-agent-format.md` y `references/prompt-templates.md`. Genera `episode-NN-flow-agent.md`: **un bloque de código por escena**, listo para pegar en Google Flow con **Agent** activado, que crea la escena completa sin más intervención.
 
-## D · Clip prompts (pasos 4–5)
+Cada bloque incluye, en este orden:
+1. GOAL (trabajar sin preguntas, no saltar ni reordenar shots).
+2. SETTINGS (9:16, modelo, audio de diálogo, sin música ni texto).
+3. INGREDIENTS: master set de la localización + un retrato limpio por personaje de la escena, con etiquetas neutras `CHAR-A`, `CHAR-B`… (nunca nombres propios).
+4. GLOBAL AVOID.
+5. CONTINUITY: reglas CONTINUE / CUT y plan B si el agente no puede usar el último frame.
+6. SHOT 1…n: tipo, duración, start, cámara, acción segundo a segundo con la mano concreta, diálogo con voz, look, avoid específico. Marca `RE-ANCHOR` cada ~4 clips encadenados.
+7. IF A SHOT FAILS y DELIVER.
 
-Para cada `T`, genera un bloque:
-```
-### SC#-T# · [CONTINUE SHOT | CUT SHOT] · [6|8|10] s · [créditos]
-Start frame: [último frame de SC#-T# | keyframe nuevo: "same moment, same place, same light, camera now at …"]
-[CAMERA] … [ACTION] … [DIALOGUE] … [LOOK] … [AVOID] …
-```
-- Acción segundo a segundo, con la mano concreta. Sin nombres: usa los descriptores fijos.
-- Elige plano con la gramática de cámara y el mapa regla → plano (p. ej. la ventaja del espectador de la regla 3 suele ser un CUT SHOT aparte).
-- Marca `RE-ANCHOR` cada ~4 clips encadenados (retrato fresco como referencia).
-- `[AVOID]` completo en cada clip + elementos específicos de ese clip.
+Reglas:
+- Prompts en inglés; diálogos en el idioma elegido.
+- Elige planos con la gramática de cámara y el mapa regla → plano (la ventaja del espectador de la regla 3 suele ser un CUT shot aparte).
+- ≤ 6.000 caracteres por bloque; si no cabe, divide en PART 1 · INGREDIENTS y PART 2 · SHOTS.
+- La cabecera del documento (en el idioma del usuario) explica cómo pegarlo, los créditos por escena y qué revisar.
+
+Si el usuario pide prompts manuales (sin Agent), genera además `episode-NN-prompts.md` con las plantillas de `references/prompt-templates.md`.
 
 ## E · Edición y presupuesto (paso 6)
 
@@ -77,4 +79,4 @@ Con `references/production.md`:
 
 - Prompts de Flow en inglés; explicaciones al usuario en su idioma.
 - No presentes como verificado algo que no se ha generado o probado en Flow.
-- Entregables como archivos `.md` en el directorio de trabajo: `episode-NN-script.md`, `episode-NN-prompts.md`, `episode-NN-edit.md`.
+- Entregables como archivos `.md` en el directorio de trabajo: `episode-NN-script.md`, `episode-NN-flow-agent.md` (principal), `episode-NN-edit.md` y, solo si se pide, `episode-NN-prompts.md`.

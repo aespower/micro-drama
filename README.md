@@ -8,11 +8,16 @@ Combina el flujo de seis pasos de la plantilla *AI Micro Drama Prompt Template* 
 
 | Modo | Petición de ejemplo | Resultado |
 |---|---|---|
-| Completo | "Crea el episodio 1 de un micro drama sobre…" | Guion → auditoría → (pausa para aprobar) → prompts → plan de edición |
+| Completo | "Crea el episodio 1 de un micro drama sobre…" | Guion → auditoría → (pausa para aprobar) → Flow Agent Brief → plan de edición |
 | Auditoría | "Revisa episode-01-script.md" | Tabla de auditoría, veredicto PASA/FALLA por regla y corrección solo de lo que falla |
-| Producción | "Haz los prompts del episodio 1" | Master sets, retratos, keyframes, clip prompts y presupuesto |
+| Producción | "Haz el brief de Flow del episodio 1" | Un bloque por escena para pegar en el modo Agent de Flow (ingredientes, keyframe y todos los shots) + presupuesto |
 
-Entregables: `episode-NN-script.md`, `episode-NN-prompts.md`, `episode-NN-edit.md`.
+Entregables: `episode-NN-script.md`, `episode-NN-flow-agent.md` (principal) y `episode-NN-edit.md`. Si pides prompts manuales, también `episode-NN-prompts.md`.
+
+### Usar el Flow Agent Brief
+1. En Google Flow, activa **Agent** en la caja de prompt.
+2. Pega el bloque de la escena 1 entero y espera a que genere ingredientes, keyframe y clips.
+3. Revisa con la checklist del documento y pega el bloque de la escena siguiente en el mismo proyecto.
 
 ## Story Rules
 
@@ -46,10 +51,12 @@ skills/micro-drama/
   references/story-rules.md
   references/prompt-templates.md
   references/production.md
+  references/flow-agent-format.md
   assets/episode-template.md
 ```
 
 ## Limitaciones
 
-- La skill genera prompts; no llama a Google Flow. Hay que pegarlos en Flow a mano (o conectar un MCP de Flow).
+- La skill genera el documento; no llama a Google Flow. Hay que pegarlo en Flow (o conectar un MCP de Flow).
+- El límite de longitud del prompt del modo Agent no está documentado; cada bloque se mantiene por debajo de ~6.000 caracteres.
 - Los costes en créditos vienen de la plantilla original y pueden cambiar; verifícalos en Flow.
