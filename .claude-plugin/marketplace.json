@@ -1,0 +1,15 @@
+{
+  "name": "micro-drama",
+  "owner": {
+    "name": "aespower"
+  },
+  "description": "Plugin para crear micro dramas verticales con IA en Google Flow.",
+  "plugins": [
+    {
+      "name": "micro-drama",
+      "source": "./",
+      "description": "Crea micro dramas verticales con IA (Google Flow) con las 5 Story Rules.",
+      "version": "0.1.0"
+    }
+  ]
+}

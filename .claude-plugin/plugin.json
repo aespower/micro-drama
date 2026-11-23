@@ -1,0 +1,8 @@
+{
+  "name": "micro-drama",
+  "version": "0.1.0",
+  "description": "Crea micro dramas verticales con IA (Google Flow): guion por escenas, auditoría con las 5 Story Rules, master sets, retratos, clip prompts encadenados y plan de edición con coste en créditos.",
+  "author": { "name": "aespower" },
+  "repository": "https://github.com/aespower/micro-drama",
+  "keywords": ["micro-drama", "short-drama", "google-flow", "video", "storytelling"]
+}
